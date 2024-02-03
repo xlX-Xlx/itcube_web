@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e0f0fc; /* светло-голубой */
+            background-color: #f0f7fc; /* светло-голубой */
             color: #333; /* темно-синий */
             margin: 0;
             padding: 0;
@@ -21,16 +21,19 @@
             background-color: #fff; /* белый */
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
-        h1, p {
-            text-align: center;
+        h1 {
             color: #1474f6; /* синий */
         }
 
+        img {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
         button {
-            display: block;
-            margin: 20px auto;
             padding: 10px 20px;
             background-color: #1474f6; /* синий */
             color: #fff; /* белый */
@@ -46,12 +49,11 @@
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Добро пожаловать на главную страницу!</h1>
-    <p>Здесь вы можете узнать о нашей компании и получить доступ к нашим услугам.</p>
-    <button onclick="window.location.href = '/test'">Начать</button>
-</div>
-
+    <div class="container">
+        <h1>Добро пожаловать на страницу теста!</h1>
+        <form action="/test" method="GET">
+            <button type="submit">Пройти тест</button>
+        </form>
+    </div>
 </body>
 </html>
