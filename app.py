@@ -36,8 +36,8 @@ def submit():
         'answer6': request.form['answer6'],
         'answer7': request.form['answer7'],
         'answer8': request.form['answer8'],
-        'answer9': request.form.getlist('answer9'),
-        'answer10': request.form.getlist('answer10'),
+        'answer9': request.form['answer9'],
+        'answer10': request.form['answer10'],
         'answer11': request.form['answer11']
     }
 
@@ -69,8 +69,8 @@ def check_answers(answers):
         'answer6': '1991',
         'answer7': None,  # Не проверяем
         'answer8': 'XIX',
-        'answer9': ['blockchain1', 'blockchain2', 'blockchain3'],
-        'answer10': ['cryptocurrency1', 'cryptocurrency2', 'cryptocurrency3'],
+        'answer9': 'blockchain1',
+        'answer10': 'cryptocurrency1',
         'answer11': '1980'
     }
 
@@ -81,7 +81,8 @@ def check_answers(answers):
         elif correct_answers[question] is None:  # Пропускаем вопросы, не требующие проверки
             results[question] = None
         elif isinstance(correct_answers[question], list):
-            results[question] = user_answer in correct_answers[question]
+            # Проверяем, что все элементы из correct_answers[question] есть в user_answer
+            results[question] = all(answer in user_answer for answer in correct_answers[question])
         else:
             results[question] = user_answer == correct_answers[question]
 

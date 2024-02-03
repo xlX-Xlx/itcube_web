@@ -9,14 +9,16 @@
     <h1>Результаты теста</h1>
     <ul>
         {% for question_num, result in results.items() %}
-            <li>
-                Вопрос {{ question_num }}:
-                {% if result %}
-                    <span style="color: green;">Правильно</span>
-                {% else %}
-                    <span style="color: red;">Неправильно</span>
-                {% endif %}
-            </li>
+        <li>
+            Вопрос {{ question_num }}:
+            {% if question_num == 'answer4' or question_num == 'answer7' %}
+                {{ result }} <!-- Показываем ответ пользователя -->
+            {% elif result %}
+                <span style="color: green;">Правильно</span>
+            {% else %}
+                <span style="color: red;">Неправильно</span>
+            {% endif %}
+        </li>
         {% endfor %}
     </ul>
 </body>
