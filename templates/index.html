@@ -4,14 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная страница</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f0fc; /* светло-голубой */
+            color: #333; /* темно-синий */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff; /* белый */
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, p {
+            text-align: center;
+            color: #1474f6; /* синий */
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #1474f6; /* синий */
+            color: #fff; /* белый */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0b3c7b; /* темно-синий */
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Добро пожаловать на страницу теста!</h1>
-        <form action="/test" method="GET">
-            <button type="submit">Пройти тест</button>
-        </form>
-    </div>
+
+<div class="container">
+    <h1>Добро пожаловать на главную страницу!</h1>
+    <p>Здесь вы можете узнать о нашей компании и получить доступ к нашим услугам.</p>
+    <button onclick="window.location.href = '/test'">Начать</button>
+</div>
+
 </body>
 </html>

@@ -4,10 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f0fc; /* светло-голубой */
+            color: #333; /* темно-синий */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff; /* белый */
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1474f6; /* синий */
+        }
+
+        p {
+            text-align: center;
+        }
+
+        form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #1474f6; /* синий */
+            color: #fff; /* белый */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0b3c7b; /* темно-синий */
+        }
+    </style>
 </head>
 <body>
+
+<div class="container">
     <h1>Тест</h1>
-    <form action="/submit" method="POST">
+    <form action="/submit" method="post">
         <p>1. В каком году появился первый компьютер?</p>
         <input type="radio" id="1941" name="answer1" value="1941">
         <label for="1941">1941</label><br>
@@ -45,7 +100,7 @@
         <br>
 
         <p>5. Какой из смартфонов совершил настоящую революцию?</p>
-        <input type="radio" id="1" name="answer5" value="iphone">
+        <input type="radio" id="iphone" name="answer5" value="iphone">
         <label for="iphone">iphone</label><br>
         <input type="radio" id="xiaomi" name="answer5" value="xiaomi">
         <label for="xiaomi">xiaomi</label><br>
@@ -95,7 +150,8 @@
         <input type="radio" id="2000" name="answer11" value="2000">
         <label for="2000">в начале 2000-х годов</label><br>
 
-        <button type="submit">Отправить ответы</button>
+        <button type="submit">Отправить</button>
+
         <ul>
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
@@ -108,5 +164,7 @@
             {% endwith %}
         </ul>
     </form>
+</div>
+
 </body>
 </html>
