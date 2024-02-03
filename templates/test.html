@@ -96,6 +96,17 @@
         <label for="2000">в начале 2000-х годов</label><br>
 
         <button type="submit">Отправить ответы</button>
+        <ul>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </ul>
     </form>
 </body>
 </html>

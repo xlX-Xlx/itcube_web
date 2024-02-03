@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, redirect, flash
 import sqlite3
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'
 
 DATABASE = 'answers.db'
 
@@ -28,24 +29,25 @@ def test():
 @app.route('/submit', methods=['POST'])
 def submit():
     answers = {
-        'answer1': request.form['answer1'],
-        'answer2': request.form['answer2'],
-        'answer3': request.form.getlist('answer3'),
-        'answer4': request.form['answer4'],
-        'answer5': request.form.getlist('answer5'),
-        'answer6': request.form['answer6'],
-        'answer7': request.form['answer7'],
-        'answer8': request.form['answer8'],
-        'answer9': request.form['answer9'],
-        'answer10': request.form['answer10'],
-        'answer11': request.form['answer11']
+        'answer1': request.form.get('answer1', ''),
+        'answer2': request.form.get('answer2', ''),
+        'answer3': request.form.getlist('answer3'),  
+        'answer4': request.form.get('answer4', ''),
+        'answer5': request.form.get('answer5', ''),
+        'answer6': request.form.get('answer6', ''),
+        'answer7': request.form.get('answer7', ''),
+        'answer8': request.form.get('answer8', ''),
+        'answer9': request.form.get('answer9', ''),
+        'answer10': request.form.get('answer10', ''),
+        'answer11': request.form.get('answer11', '')
     }
 
+    if '' in answers.values():
+        flash('Вы ответили не на все вопросы.')
+        return redirect('/test')
+
     save_answers(answers)
-
-    # Проверка ответов
     results = check_answers(answers)
-
     return render_template('results.html', results=results)
 
 def save_answers(answers):
@@ -65,7 +67,7 @@ def check_answers(answers):
         'answer2': 'цифровом виде',
         'answer3': ['бизнес', 'образование', 'медицина', 'ритейл', 'искусство и развлечения', 'производство', 'общепит'],
         'answer4': None,  # Не проверяем
-        'answer5': ['iphone'],
+        'answer5': 'iphone',
         'answer6': '1991',
         'answer7': None,  # Не проверяем
         'answer8': 'XIX',
