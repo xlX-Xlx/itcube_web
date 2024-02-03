@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты теста</title>
+</head>
+<body>
+    <h1>Результаты теста</h1>
+    <ul>
+        {% for question_num, result in results.items() %}
+            <li>
+                Вопрос {{ question_num }}:
+                {% if result %}
+                    <span style="color: green;">Правильно</span>
+                {% else %}
+                    <span style="color: red;">Неправильно</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

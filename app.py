@@ -1,27 +1,21 @@
+from flask import Flask, render_template, request, g
 import sqlite3
-from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Создание базы данных и таблицы
-conn = sqlite3.connect('answers.db')
-c = conn.cursor()
-c.execute('''CREATE TABLE IF NOT EXISTS user_answers (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                answer1 TEXT,
-                answer2 TEXT,
-                answer3 TEXT,
-                answer4 TEXT,
-                answer5 TEXT,
-                answer6 TEXT,
-                answer7 TEXT,
-                answer8 TEXT,
-                answer9 TEXT,
-                answer10 TEXT,
-                answer11 TEXT
-            )''')
-conn.commit()
-conn.close()
+DATABASE = 'answers.db'
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 @app.route('/')
 def index():
@@ -33,18 +27,66 @@ def test():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    if request.method == 'POST':
-        answers = [request.form['answer{}'.format(i)] for i in range(1, 12)]
-        save_answers(answers)
-        return 'Спасибо за участие в тесте!'
+    answers = {
+        'answer1': request.form['answer1'],
+        'answer2': request.form['answer2'],
+        'answer3': request.form.getlist('answer3'),
+        'answer4': request.form['answer4'],
+        'answer5': request.form.getlist('answer5'),
+        'answer6': request.form['answer6'],
+        'answer7': request.form['answer7'],
+        'answer8': request.form['answer8'],
+        'answer9': request.form.getlist('answer9'),
+        'answer10': request.form.getlist('answer10'),
+        'answer11': request.form['answer11']
+    }
+
+    save_answers(answers)
+
+    # Проверка ответов
+    results = check_answers(answers)
+
+    return render_template('results.html', results=results)
 
 def save_answers(answers):
-    conn = sqlite3.connect('answers.db')
-    c = conn.cursor()
+    db = get_db()
+    c = db.cursor()
     c.execute('''INSERT INTO user_answers (answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, answer11)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', answers)
-    conn.commit()
-    conn.close()
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (answers['answer1'], answers['answer2'], ', '.join(answers['answer3']), answers['answer4'],
+                 ', '.join(answers['answer5']), answers['answer6'], answers['answer7'], answers['answer8'],
+                 ', '.join(answers['answer9']), ', '.join(answers['answer10']), answers['answer11']))
+    db.commit()
+
+def check_answers(answers):
+    # Здесь происходит проверка ответов
+    correct_answers = {
+        'answer1': '1941',
+        'answer2': 'цифровом виде',
+        'answer3': ['бизнес', 'образование', 'медицина', 'ритейл', 'искусство и развлечения', 'производство', 'общепит'],
+        'answer4': None,  # Не проверяем
+        'answer5': ['iphone'],
+        'answer6': '1991',
+        'answer7': None,  # Не проверяем
+        'answer8': 'XIX',
+        'answer9': ['blockchain1', 'blockchain2', 'blockchain3'],
+        'answer10': ['cryptocurrency1', 'cryptocurrency2', 'cryptocurrency3'],
+        'answer11': '1980'
+    }
+
+    results = {}
+    for question, user_answer in answers.items():
+        if question == 'answer4' or question == 'answer7':
+            results[question] = user_answer  # Просто сохраняем ответ пользователя
+        elif correct_answers[question] is None:  # Пропускаем вопросы, не требующие проверки
+            results[question] = None
+        elif isinstance(correct_answers[question], list):
+            results[question] = user_answer in correct_answers[question]
+        else:
+            results[question] = user_answer == correct_answers[question]
+
+    return results
+
 
 if __name__ == '__main__':
     app.run(debug=True)
