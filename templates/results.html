@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e0f0fc; /* светло-голубой */
+            background-color: #dff2ff; /* светло-голубой */
             color: #333; /* темно-синий */
             margin: 0;
             padding: 0;
@@ -59,7 +59,7 @@
         {% for question_num, result in results.items() %}
             <li>
                 Вопрос {{ loop.index }}:
-                {% if question_num == 'answer4' or question_num == 'answer7' %}
+                {% if question_num == 'answer4' or question_num == 'answer7' or question_num == 'answer12' %}
                     {{ result }} <!-- Показываем ответ пользователя -->
                 {% elif result %}
                     <span style="color: green;">Правильно</span>

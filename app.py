@@ -18,6 +18,27 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+def create_table():
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS user_answers (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    answer1 TEXT,
+                    answer2 TEXT,
+                    answer3 TEXT,
+                    answer4 TEXT,
+                    answer5 TEXT,
+                    answer6 TEXT,
+                    answer7 TEXT,
+                    answer8 TEXT,
+                    answer9 TEXT,
+                    answer10 TEXT,
+                    answer11 TEXT,
+                    answer12 TEXT
+                 )''')
+    conn.commit()
+    conn.close()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -39,7 +60,8 @@ def submit():
         'answer8': request.form.get('answer8', ''),
         'answer9': request.form.get('answer9', ''),
         'answer10': request.form.get('answer10', ''),
-        'answer11': request.form.get('answer11', '')
+        'answer11': request.form.get('answer11', ''),
+        'answer12': request.form.get('answer12', '')
     }
 
     if '' in answers.values():
@@ -53,13 +75,13 @@ def submit():
 def save_answers(answers):
     db = get_db()
     c = db.cursor()
-    c.execute('''INSERT INTO user_answers (answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, answer11)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+    c.execute('''INSERT INTO user_answers (answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, answer11, answer12)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                 (answers['answer1'], answers['answer2'], ', '.join(answers['answer3']), answers['answer4'],
                  ', '.join(answers['answer5']), answers['answer6'], answers['answer7'], answers['answer8'],
-                 ', '.join(answers['answer9']), ', '.join(answers['answer10']), answers['answer11']))
+                 ', '.join(answers['answer9']), ', '.join(answers['answer10']), answers['answer11'], answers['answer12']))
     db.commit()
-
+    
 def check_answers(answers):
     # Здесь происходит проверка ответов
     correct_answers = {
@@ -73,12 +95,13 @@ def check_answers(answers):
         'answer8': 'XIX',
         'answer9': 'blockchain1',
         'answer10': 'cryptocurrency1',
-        'answer11': '1980'
+        'answer11': '1980',
+        'answer12': None  # Не проверяем
     }
 
     results = {}
     for question, user_answer in answers.items():
-        if question == 'answer4' or question == 'answer7':
+        if question == 'answer4' or question == 'answer7' or question == 'answer12':
             results[question] = user_answer  # Просто сохраняем ответ пользователя
         elif correct_answers[question] is None:  # Пропускаем вопросы, не требующие проверки
             results[question] = None
@@ -92,4 +115,5 @@ def check_answers(answers):
 
 
 if __name__ == '__main__':
+    create_table()
     app.run(debug=True)
