@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, g, redirect, flash
 import sqlite3
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -17,6 +19,11 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+
+def calculate_similarity(expected_answer, user_answer):
+    vectorizer = CountVectorizer().fit_transform([expected_answer, user_answer])
+    similarity_matrix = cosine_similarity(vectorizer)
+    return similarity_matrix[0, 1]
 
 def create_table():
     conn = sqlite3.connect(DATABASE)
@@ -83,33 +90,43 @@ def save_answers(answers):
     db.commit()
     
 def check_answers(answers):
-    # Здесь происходит проверка ответов
     correct_answers = {
         'answer1': '1941',
         'answer2': 'цифровом виде',
         'answer3': ['бизнес', 'образование', 'медицина', 'ритейл', 'искусство и развлечения', 'производство', 'общепит'],
-        'answer4': None,  # Не проверяем
+        'answer4': "это технология, которая позволяет объединять сенсоры, гаджеты, бытовую технику и даже автомобили в единую сеть при помощи беспроводной связи", 
         'answer5': 'iphone',
         'answer6': '1991',
-        'answer7': None,  # Не проверяем
+        'answer7': "под «искусственным интеллектом» подразумевают любые алгоритмы, которые решают какие-либо задачи независимо от человека: производят сложные вычисления, распознают изображения и речь, собирают и обрабатывают массивы данных.",
         'answer8': 'XIX',
         'answer9': 'blockchain1',
         'answer10': 'cryptocurrency1',
         'answer11': '1980',
-        'answer12': None  # Не проверяем
+        'answer12': "Аббревиатура AR может означать 'дополненную реальность' (Augmented Reality), технологию добавления виртуальных объектов в реальное окружение."
     }
 
     results = {}
     for question, user_answer in answers.items():
-        if question == 'answer4' or question == 'answer7' or question == 'answer12':
-            results[question] = user_answer  # Просто сохраняем ответ пользователя
-        elif correct_answers[question] is None:  # Пропускаем вопросы, не требующие проверки
+        if question == 'answer4':
+            similarity_score = calculate_similarity(correct_answers['answer4'], user_answer)
+            results[question] = similarity_score > 0.7
+        elif question == 'answer7':
+            similarity_score = calculate_similarity(correct_answers['answer7'], user_answer)
+            results[question] = similarity_score > 0.7
+        elif question == 'answer12':
+            similarity_score = calculate_similarity(correct_answers['answer12'], user_answer)
+            results[question] = similarity_score > 0.7
+        elif correct_answers[question] is None:
             results[question] = None
         elif isinstance(correct_answers[question], list):
-            # Проверяем, что все элементы из correct_answers[question] есть в user_answer
-            results[question] = all(answer in user_answer for answer in correct_answers[question])
+            user_answer_list = request.form.getlist(question)
+            results[question] = all(answer in user_answer_list for answer in correct_answers[question])
         else:
             results[question] = user_answer == correct_answers[question]
+
+    return results
+
+
 
     return results
 
