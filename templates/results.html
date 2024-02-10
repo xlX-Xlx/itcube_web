@@ -59,9 +59,7 @@
         {% for question_num, result in results.items() %}
             <li>
                 Вопрос {{ loop.index }}:
-                {% if question_num == 'answer4' or question_num == 'answer7' or question_num == 'answer12' %}
-                    {{ result }} <!-- Показываем ответ пользователя -->
-                {% elif result %}
+                {% if result %}
                     <span style="color: green;">Правильно</span>
                 {% else %}
                     <span style="color: red;">Неправильно</span>
@@ -70,6 +68,6 @@
         {% endfor %}
     </ul>
 </div>
-
+<img src="{{ url_for('static', filename='img/logo.png') }}" alt="Логотип" style="position: fixed; bottom: 0; left: 0;">
 </body>
 </html>

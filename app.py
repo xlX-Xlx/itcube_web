@@ -110,14 +110,13 @@ def check_answers(answers):
         if question == 'answer4':
             similarity_score = calculate_similarity(correct_answers['answer4'], user_answer)
             results[question] = similarity_score > 0.7
+            
         elif question == 'answer7':
             similarity_score = calculate_similarity(correct_answers['answer7'], user_answer)
             results[question] = similarity_score > 0.7
         elif question == 'answer12':
             similarity_score = calculate_similarity(correct_answers['answer12'], user_answer)
             results[question] = similarity_score > 0.7
-        elif correct_answers[question] is None:
-            results[question] = None
         elif isinstance(correct_answers[question], list):
             user_answer_list = request.form.getlist(question)
             results[question] = all(answer in user_answer_list for answer in correct_answers[question])
