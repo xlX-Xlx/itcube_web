@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты теста</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/img/fon.png');
+            background-size: 45%; 
+            background-repeat: no-repeat; 
+            background-position: top right; 
+            color: #333; 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #e2f3ff; 
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1474f6; 
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        span {
+            font-weight: bold;
+        }
+
+        .logo {
+            position: absolute; 
+            top: 20px; 
+            left: 20px;
+            max-width: 150px; 
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Результаты теста</h1>
+    <ul>
+        {% for question_num, result in results.items() %}
+            <li>
+                Вопрос {{ loop.index }}:
+                {% if result %}
+                    <span style="color: #003A9E;">Правильно</span>
+                {% else %}
+                    <span style="color: #bbbbbb;">Неправильно</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        <h1>Поздравляем с прохождением теста! Выбери IT!</h1>
+    </ul>
+</div>
+<img src="{{ url_for('static', filename='img/logo.png') }}" alt="Логотип" class="logo">
+</body>
+</html>

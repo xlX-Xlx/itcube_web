@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/img/fon.png');
+            background-size: 45%; 
+            background-repeat: no-repeat; 
+            background-position: top right; 
+            color: #333; 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #e2f3ff; 
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1474f6; 
+        }
+
+        p {
+            text-align: center;
+        }
+
+        form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #1474f6; 
+            color: #fff; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0b3c7b; 
+        }
+
+        .logo {
+            position: absolute; 
+            top: 20px; 
+            left: 20px;
+            max-width: 150px; 
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать на страницу теста "Выбери IT" от центра цифрового образования "IT-куб" г.Рязань</h1>
+        <form action="/test" method="GET">
+            <button type="submit">Пройти тест</button>
+        </form>
+    </div>
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Логотип" class="logo">
+</body>
+</html>
