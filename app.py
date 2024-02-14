@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, g, redirect, flash
 import sqlite3
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -20,29 +18,24 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-def calculate_similarity(expected_answer, user_answer):
-    vectorizer = CountVectorizer().fit_transform([expected_answer, user_answer])
-    similarity_matrix = cosine_similarity(vectorizer)
-    return similarity_matrix[0, 1]
-
 def create_table():
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS user_answers (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    answer1 TEXT,
-                    answer2 TEXT,
-                    answer3 TEXT,
-                    answer4 TEXT,
-                    answer5 TEXT,
-                    answer6 TEXT,
-                    answer7 TEXT,
-                    answer8 TEXT,
-                    answer9 TEXT,
-                    answer10 TEXT,
-                    answer11 TEXT,
-                    answer12 TEXT
-                 )''')
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                answer1 TEXT,
+                answer2 TEXT,
+                answer3 TEXT,
+                answer4 TEXT,
+                answer5 TEXT,
+                answer6 TEXT,
+                answer7 TEXT,
+                answer8 TEXT,
+                answer9 TEXT,
+                answer10 TEXT,
+                answer11 TEXT,
+                answer12 TEXT
+                )''')
     conn.commit()
     conn.close()
 
@@ -59,7 +52,7 @@ def submit():
     answers = {
         'answer1': request.form.get('answer1', ''),
         'answer2': request.form.get('answer2', ''),
-        'answer3': request.form.getlist('answer3'),  
+        'answer3': request.form.getlist('answer3'), 
         'answer4': request.form.get('answer4', ''),
         'answer5': request.form.get('answer5', ''),
         'answer6': request.form.get('answer6', ''),
@@ -85,10 +78,10 @@ def save_answers(answers):
     c.execute('''INSERT INTO user_answers (answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10, answer11, answer12)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                 (answers['answer1'], answers['answer2'], ', '.join(answers['answer3']), answers['answer4'],
-                 ', '.join(answers['answer5']), answers['answer6'], answers['answer7'], answers['answer8'],
-                 ', '.join(answers['answer9']), ', '.join(answers['answer10']), answers['answer11'], answers['answer12']))
+                ', '.join(answers['answer5']), answers['answer6'], answers['answer7'], answers['answer8'],
+                ', '.join(answers['answer9']), ', '.join(answers['answer10']), answers['answer11'], answers['answer12']))
     db.commit()
-    
+
 def check_answers(answers):
     correct_answers = {
         'answer1': '1941',
@@ -122,10 +115,6 @@ def check_answers(answers):
             results[question] = all(answer in user_answer_list for answer in correct_answers[question])
         else:
             results[question] = user_answer == correct_answers[question]
-
-    return results
-
-
 
     return results
 
